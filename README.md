@@ -133,13 +133,13 @@ mvn test
 #### Unit Tests
 Tests the business logic in isolation, primarily focused on the domain layer:
 ```bash
-mvn test -Dtest=*Test
+mvn test -Dtest="*Test"
 ```
 
 #### Integration Tests
 Tests the integration between components, including database operations:
 ```bash
-mvn test -Dtest=*IntegrationTest
+mvn test -Dtest="*IntegrationTest"
 ```
 
 #### API Tests
@@ -166,7 +166,7 @@ No need to run external dependencies for testing as they are automatically confi
 
 To generate test coverage reports:
 ```bash
-mvn jacoco:report
+mvn test jacoco:report
 ```
 
 Then open `target/site/jacoco/index.html` in your browser to view the coverage report.
