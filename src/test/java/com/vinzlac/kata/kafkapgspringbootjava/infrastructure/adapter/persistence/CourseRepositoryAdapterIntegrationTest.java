@@ -47,9 +47,9 @@ class CourseRepositoryAdapterIntegrationTest {
                 .date(today)
                 .build();
         
-        course.ajouterPartant(Partant.builder().nom("Cheval1").numero(1).build());
-        course.ajouterPartant(Partant.builder().nom("Cheval2").numero(2).build());
-        course.ajouterPartant(Partant.builder().nom("Cheval3").numero(3).build());
+        course.addPartant(Partant.builder().nom("Cheval1").numero(1).build());
+        course.addPartant(Partant.builder().nom("Cheval2").numero(2).build());
+        course.addPartant(Partant.builder().nom("Cheval3").numero(3).build());
         
         // When
         Course savedCourse = courseRepositoryAdapter.save(course);

@@ -60,9 +60,9 @@ class CourseControllerTest {
         Partant partant2 = Partant.builder().nom("Cheval2").numero(2).build();
         Partant partant3 = Partant.builder().nom("Cheval3").numero(3).build();
         
-        course.ajouterPartant(partant1);
-        course.ajouterPartant(partant2);
-        course.ajouterPartant(partant3);
+        course.addPartant(partant1);
+        course.addPartant(partant2);
+        course.addPartant(partant3);
 
         when(courseApplicationService.createCourse(any(Course.class))).thenReturn(course);
 

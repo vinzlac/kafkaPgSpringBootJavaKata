@@ -64,9 +64,9 @@ class CourseIntegrationTest {
                 .date(LocalDate.now())
                 .build();
         
-        course.ajouterPartant(Partant.builder().nom("Cheval1").numero(1).build());
-        course.ajouterPartant(Partant.builder().nom("Cheval2").numero(2).build());
-        course.ajouterPartant(Partant.builder().nom("Cheval3").numero(3).build());
+        course.addPartant(Partant.builder().nom("Cheval1").numero(1).build());
+        course.addPartant(Partant.builder().nom("Cheval2").numero(2).build());
+        course.addPartant(Partant.builder().nom("Cheval3").numero(3).build());
         
         // Quand on crée une course, l'événement devrait être publié
         Course savedCourse = courseService.createCourse(course);

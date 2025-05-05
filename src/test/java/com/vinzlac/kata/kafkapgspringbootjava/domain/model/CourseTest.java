@@ -16,7 +16,7 @@ class CourseTest {
         Partant partant = Partant.builder().nom("Cheval1").numero(1).build();
         
         // When
-        course.ajouterPartant(partant);
+        course.addPartant(partant);
         
         // Then
         assertEquals(1, course.getPartants().size());
@@ -27,11 +27,11 @@ class CourseTest {
     void addRunner_WithExistingNumber_ShouldThrowException() {
         // Given
         Course course = new Course();
-        course.ajouterPartant(Partant.builder().nom("Cheval1").numero(1).build());
+        course.addPartant(Partant.builder().nom("Cheval1").numero(1).build());
         
         // When & Then
         assertThrows(IllegalArgumentException.class, () -> 
-                course.ajouterPartant(Partant.builder().nom("Cheval2").numero(1).build()));
+                course.addPartant(Partant.builder().nom("Cheval2").numero(1).build()));
     }
     
     @Test

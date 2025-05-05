@@ -42,7 +42,7 @@ public class CourseController {
                     .nom(partantRequest.nom())
                     .numero(partantRequest.numero())
                     .build();
-            course.ajouterPartant(partant);
+            course.addPartant(partant);
         });
         
         Course savedCourse = courseApplicationService.createCourse(course);

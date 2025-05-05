@@ -22,7 +22,7 @@ public class Course {
     @Builder.Default
     private List<Partant> partants = new ArrayList<>();
     
-    public void ajouterPartant(Partant partant) {
+    public void addPartant(Partant partant) {
         if (partants == null) {
             partants = new ArrayList<>();
         }
