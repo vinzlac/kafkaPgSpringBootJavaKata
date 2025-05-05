@@ -7,13 +7,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
-@ActiveProfiles("test")
-@EmbeddedKafka(partitions = 1, 
-               topics = {"course-created-test"},
-               bootstrapServersProperty = "spring.kafka.bootstrap-servers")
+@EmbeddedKafka(partitions = 1, topics = {"course-created-test"})
 @TestPropertySource(properties = {
-        "kafka.topics.course-created=course-created-test"
+    "kafka.topics.course-created=course-created-test",
+    "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}"
 })
+@ActiveProfiles("test")
 class KafkapgspringbootjavaApplicationTests {
 
 	@Test
