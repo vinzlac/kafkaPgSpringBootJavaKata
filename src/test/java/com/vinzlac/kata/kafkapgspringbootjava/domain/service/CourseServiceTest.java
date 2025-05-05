@@ -1,4 +1,4 @@
-package com.vinzlac.kata.kafkapgspringbootjava.application.service;
+package com.vinzlac.kata.kafkapgspringbootjava.domain.service;
 
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Course;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Partant;
@@ -56,7 +56,7 @@ class CourseServiceTest {
         when(courseRepository.save(any(Course.class))).thenReturn(validCourse);
         
         // When
-        Course result = courseService.creerCourse(validCourse);
+        Course result = courseService.createCourse(validCourse);
         
         // Then
         assertEquals(validCourse, result);
@@ -70,7 +70,7 @@ class CourseServiceTest {
         when(courseRepository.findByDateAndNumero(today, 1)).thenReturn(Optional.of(validCourse));
         
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> courseService.creerCourse(validCourse));
+        assertThrows(IllegalArgumentException.class, () -> courseService.createCourse(validCourse));
         verify(courseRepository, never()).save(any(Course.class));
         verify(courseEventPublisher, never()).publishCourseCreated(any(Course.class));
     }
@@ -90,7 +90,7 @@ class CourseServiceTest {
         when(courseRepository.findByDateAndNumero(today, 1)).thenReturn(Optional.empty());
         
         // When & Then
-        assertThrows(IllegalArgumentException.class, () -> courseService.creerCourse(invalidCourse));
+        assertThrows(IllegalArgumentException.class, () -> courseService.createCourse(invalidCourse));
         verify(courseRepository, never()).save(any(Course.class));
         verify(courseEventPublisher, never()).publishCourseCreated(any(Course.class));
     }

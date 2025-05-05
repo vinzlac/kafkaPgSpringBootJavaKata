@@ -1,4 +1,4 @@
-package com.vinzlac.kata.kafkapgspringbootjava.infrastructure.config;
+package com.vinzlac.kata.kafkapgspringbootjava.application.config;
 
 import com.vinzlac.kata.kafkapgspringbootjava.infrastructure.adapter.messaging.CourseCreatedEvent;
 import org.apache.kafka.clients.admin.NewTopic;

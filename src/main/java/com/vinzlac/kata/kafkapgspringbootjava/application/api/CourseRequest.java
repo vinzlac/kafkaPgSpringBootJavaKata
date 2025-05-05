@@ -1,4 +1,4 @@
-package com.vinzlac.kata.kafkapgspringbootjava.infrastructure.adapter.rest;
+package com.vinzlac.kata.kafkapgspringbootjava.application.api;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -13,13 +13,14 @@ public record CourseRequest(
         @NotBlank(message = "Le nom est obligatoire")
         String nom,
         
-        @NotNull(message = "Le numéro est obligatoire")
-        @Min(value = 1, message = "Le numéro doit être positif")
-        Integer numero,
+        @Min(value = 1, message = "Le numéro doit être supérieur à zéro")
+        int numero,
         
         @NotNull(message = "La date est obligatoire")
         LocalDate date,
         
-        @NotEmpty(message = "La course doit avoir au moins 3 partants")
-        List<@Valid PartantRequest> partants
-) {} 
+        @NotEmpty(message = "La course doit avoir au moins un partant")
+        @Valid
+        List<PartantRequest> partants
+) {
+} 

@@ -1,4 +1,4 @@
-package com.vinzlac.kata.kafkapgspringbootjava.infrastructure.adapter.rest;
+package com.vinzlac.kata.kafkapgspringbootjava.application.api;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,4 +9,5 @@ public record CourseResponse(
         int numero,
         LocalDate date,
         List<PartantResponse> partants
-) {} 
+) {
+} 

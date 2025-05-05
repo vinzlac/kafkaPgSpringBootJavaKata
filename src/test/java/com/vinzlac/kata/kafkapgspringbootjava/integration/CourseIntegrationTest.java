@@ -1,76 +1,62 @@
 package com.vinzlac.kata.kafkapgspringbootjava.integration;
 
-import com.vinzlac.kata.kafkapgspringbootjava.application.service.CourseService;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Course;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Partant;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.test.EmbeddedKafkaBroker;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.kafka.test.utils.KafkaTestUtils;
-import org.springframework.test.context.TestPropertySource;
-
+import com.vinzlac.kata.kafkapgspringbootjava.domain.service.CourseService;
+import com.vinzlac.kata.kafkapgspringbootjava.infrastructure.adapter.messaging.CourseCreatedEvent;
+import com.vinzlac.kata.kafkapgspringbootjava.infrastructure.adapter.messaging.CourseEventPublisherAdapter;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
-
-import com.vinzlac.kata.kafkapgspringbootjava.infrastructure.adapter.messaging.CourseCreatedEvent;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.kafka.test.EmbeddedKafkaBroker;
+import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.context.ActiveProfiles;
 
-import com.vinzlac.kata.kafkapgspringbootjava.infrastructure.adapter.messaging.CourseEventPublisherAdapter;
-
-import java.time.LocalDate;
 import java.time.Duration;
-
-import java.util.Map;
+import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Map;
 
-import org.apache.kafka.clients.consumer.Consumer;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-@EmbeddedKafka(partitions = 1, 
-               topics = {"course-created-test"},
-               bootstrapServersProperty = "spring.kafka.bootstrap-servers")
-@TestPropertySource(properties = {
-        "spring.datasource.url=jdbc:h2:mem:testdb",
-        "spring.datasource.driverClassName=org.h2.Driver",
-        "spring.jpa.hibernate.ddl-auto=create-drop",
-        "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect",
-        "hibernate.dialect=org.hibernate.dialect.H2Dialect",
-        "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect",
-        "spring.jpa.properties.hibernate.globally_quoted_identifiers=true",
-        "kafka.topics.course-created=course-created-test"
-})
+@EmbeddedKafka(partitions = 1, topics = {"courses"})
+@ActiveProfiles("test")
 class CourseIntegrationTest {
-
+    
+    @Autowired
+    private EmbeddedKafkaBroker embeddedKafkaBroker;
+    
     @Autowired
     private CourseService courseService;
     
     @Autowired
-    private KafkaTemplate<String, CourseCreatedEvent> kafkaTemplate;
-    
-    @SpyBean
     private CourseEventPublisherAdapter publisherAdapter;
     
-    @Autowired
-    private EmbeddedKafkaBroker embeddedKafkaBroker;
+    private Consumer<String, CourseCreatedEvent> consumer;
+    
+    @BeforeEach
+    void setUp() {
+        consumer = configureConsumer();
+    }
+
+    @AfterEach
+    void tearDown() {
+        consumer.close();
+    }
 
     @Test
-    void publishCourseCreated_DevraitEnvoyerMessageKafka() throws Exception {
-        // Créer un consumer de test pour vérifier la réception
-        Consumer<String, CourseCreatedEvent> consumer = configureConsumer();
-        
+    void publishCourseCreated_ShouldSendMessageKafka() throws Exception {
         // Créer et sauvegarder une course
         Course course = Course.builder()
                 .nom("Course Kafka Test")
@@ -83,10 +69,7 @@ class CourseIntegrationTest {
         course.ajouterPartant(Partant.builder().nom("Cheval3").numero(3).build());
         
         // Quand on crée une course, l'événement devrait être publié
-        Course savedCourse = courseService.creerCourse(course);
-        
-        // Vérifier que la méthode publishCourseCreated a été appelée
-        verify(publisherAdapter, times(1)).publishCourseCreated(any(Course.class));
+        Course savedCourse = courseService.createCourse(course);
         
         // Consommer et vérifier le message
         ConsumerRecord<String, CourseCreatedEvent> record = KafkaTestUtils.getSingleRecord(
@@ -97,8 +80,6 @@ class CourseIntegrationTest {
         assertEquals(savedCourse.getNom(), record.value().getNom());
         assertEquals(savedCourse.getNumero(), record.value().getNumero());
         assertEquals(3, record.value().getPartants().size());
-        
-        consumer.close();
     }
     
     private Consumer<String, CourseCreatedEvent> configureConsumer() {

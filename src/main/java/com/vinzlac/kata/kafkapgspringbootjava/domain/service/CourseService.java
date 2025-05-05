@@ -1,4 +1,4 @@
-package com.vinzlac.kata.kafkapgspringbootjava.application.service;
+package com.vinzlac.kata.kafkapgspringbootjava.domain.service;
 
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Course;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.port.CourseEventPublisher;
@@ -19,7 +19,7 @@ public class CourseService {
     private final CourseEventPublisher courseEventPublisher;
     
     @Transactional
-    public Course creerCourse(Course course) {
+    public Course createCourse(Course course) {
         // Vérifier si une course avec la même date et le même numéro existe déjà
         Optional<Course> existingCourse = courseRepository.findByDateAndNumero(course.getDate(), course.getNumero());
         if (existingCourse.isPresent()) {
