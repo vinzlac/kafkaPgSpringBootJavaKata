@@ -38,7 +38,7 @@ class CourseRepositoryAdapterIntegrationTest {
     private CourseJpaRepository courseJpaRepository;
 
     @Test
-    void save_DevraitSauvegarderEtRetournerCourseDomaine() {
+    void save_ShouldSaveAndReturnDomainRace() {
         // Given
         LocalDate today = LocalDate.now();
         Course course = Course.builder()
@@ -69,9 +69,9 @@ class CourseRepositoryAdapterIntegrationTest {
     }
     
     @Test
-    void findById_CourseExistante_DevraitRetournerCourse() {
+    void findById_ExistingRace_ShouldReturnRace() {
         // Given
-        CourseEntity courseEntity = prepareCourseWithPartants();
+        CourseEntity courseEntity = prepareRaceWithRunners();
         CourseEntity savedEntity = courseJpaRepository.save(courseEntity);
         
         // When
@@ -87,10 +87,10 @@ class CourseRepositoryAdapterIntegrationTest {
     }
     
     @Test
-    void findByDateAndNumero_CourseExistante_DevraitRetournerCourse() {
+    void findByDateAndNumber_ExistingRace_ShouldReturnRace() {
         // Given
         LocalDate today = LocalDate.now();
-        CourseEntity courseEntity = prepareCourseWithPartants();
+        CourseEntity courseEntity = prepareRaceWithRunners();
         courseEntity.setDate(today);
         courseEntity.setNumero(5);
         courseJpaRepository.save(courseEntity);
@@ -106,15 +106,15 @@ class CourseRepositoryAdapterIntegrationTest {
     }
     
     @Test
-    void findByDate_AvecCoursesExistantes_DevraitRetournerCourses() {
+    void findByDate_WithExistingRaces_ShouldReturnRaces() {
         // Given
         LocalDate today = LocalDate.now();
         
-        CourseEntity course1 = prepareCourseWithPartants();
+        CourseEntity course1 = prepareRaceWithRunners();
         course1.setDate(today);
         course1.setNumero(1);
         
-        CourseEntity course2 = prepareCourseWithPartants();
+        CourseEntity course2 = prepareRaceWithRunners();
         course2.setDate(today);
         course2.setNumero(2);
         
@@ -127,7 +127,7 @@ class CourseRepositoryAdapterIntegrationTest {
         assertEquals(2, result.size());
     }
     
-    private CourseEntity prepareCourseWithPartants() {
+    private CourseEntity prepareRaceWithRunners() {
         CourseEntity courseEntity = CourseEntity.builder()
                 .nom("Course Test")
                 .numero(1)

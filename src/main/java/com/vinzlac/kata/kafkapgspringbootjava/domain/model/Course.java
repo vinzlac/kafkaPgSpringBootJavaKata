@@ -35,7 +35,7 @@ public class Course {
         partants.add(partant);
     }
     
-    public boolean estValide() {
+    public boolean isValid() {
         // Une course doit avoir au moins 3 partants
         if (partants == null || partants.size() < 3) {
             return false;

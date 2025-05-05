@@ -50,7 +50,7 @@ class CourseServiceTest {
     }
 
     @Test
-    void creerCourse_CourseValide_DevraitCreerCourse() {
+    void createRace_ValidRace_ShouldCreateRace() {
         // Given
         when(courseRepository.findByDateAndNumero(today, 1)).thenReturn(Optional.empty());
         when(courseRepository.save(any(Course.class))).thenReturn(validCourse);
@@ -65,7 +65,7 @@ class CourseServiceTest {
     }
     
     @Test
-    void creerCourse_CourseExistante_DevraitLeverException() {
+    void createRace_ExistingRace_ShouldThrowException() {
         // Given
         when(courseRepository.findByDateAndNumero(today, 1)).thenReturn(Optional.of(validCourse));
         
@@ -76,7 +76,7 @@ class CourseServiceTest {
     }
     
     @Test
-    void creerCourse_CourseInvalide_DevraitLeverException() {
+    void createRace_InvalidRace_ShouldThrowException() {
         // Given
         Course invalidCourse = Course.builder()
                 .nom("Course Test")
@@ -96,7 +96,7 @@ class CourseServiceTest {
     }
     
     @Test
-    void getCourseById_CourseExistante_DevraitRetournerCourse() {
+    void getRaceById_ExistingRace_ShouldReturnRace() {
         // Given
         Long id = 1L;
         when(courseRepository.findById(id)).thenReturn(Optional.of(validCourse));
@@ -110,7 +110,7 @@ class CourseServiceTest {
     }
     
     @Test
-    void getCourseById_CourseInexistante_DevraitRetournerVide() {
+    void getRaceById_NonExistingRace_ShouldReturnEmpty() {
         // Given
         Long id = 1L;
         when(courseRepository.findById(id)).thenReturn(Optional.empty());
@@ -123,7 +123,7 @@ class CourseServiceTest {
     }
     
     @Test
-    void getCoursesByDate_DevraitRetournerCourses() {
+    void getRacesByDate_ShouldReturnRaces() {
         // Given
         when(courseRepository.findByDate(today)).thenReturn(List.of(validCourse));
         

@@ -57,7 +57,7 @@ class CourseControllerTest {
     }
 
     @Test
-    void creerCourse_RequeteValide_DevraitRetournerCourseCreee() throws Exception {
+    void createRace_ValidRequest_ShouldReturnCreatedRace() throws Exception {
         // Given
         CourseRequest request = new CourseRequest(
                 "Course Test",
@@ -84,7 +84,7 @@ class CourseControllerTest {
     }
     
     @Test
-    void creerCourse_RequeteInvalide_DevraitRetournerBadRequest() throws Exception {
+    void createRace_InvalidRequest_ShouldReturnBadRequest() throws Exception {
         // Given
         CourseRequest request = new CourseRequest(
                 "",  // Nom vide
@@ -101,7 +101,7 @@ class CourseControllerTest {
     }
     
     @Test
-    void getCourseById_CourseExistante_DevraitRetournerCourse() throws Exception {
+    void getRaceById_ExistingRace_ShouldReturnRace() throws Exception {
         // Given
         when(courseService.getCourseById(1L)).thenReturn(Optional.of(course));
         
@@ -115,7 +115,7 @@ class CourseControllerTest {
     }
     
     @Test
-    void getCourseById_CourseInexistante_DevraitRetournerNotFound() throws Exception {
+    void getRaceById_NonExistingRace_ShouldReturnNotFound() throws Exception {
         // Given
         when(courseService.getCourseById(1L)).thenReturn(Optional.empty());
         
@@ -125,7 +125,7 @@ class CourseControllerTest {
     }
     
     @Test
-    void getCoursesByDate_DevraitRetournerCourses() throws Exception {
+    void getRacesByDate_ShouldReturnRaces() throws Exception {
         // Given
         when(courseService.getCoursesByDate(today)).thenReturn(List.of(course));
         

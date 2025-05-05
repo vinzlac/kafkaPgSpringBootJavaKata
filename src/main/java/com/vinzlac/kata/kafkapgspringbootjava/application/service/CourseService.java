@@ -28,7 +28,7 @@ public class CourseService {
         }
         
         // Vérifier que la course est valide (au moins 3 partants avec numéros continus commençant à 1)
-        if (!course.estValide()) {
+        if (!course.isValid()) {
             throw new IllegalArgumentException("La course doit avoir au moins 3 partants avec des numéros continus commençant à 1");
         }
         

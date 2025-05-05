@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CourseTest {
 
     @Test
-    void ajouterPartant_DevraitAjouterPartant() {
+    void addRunner_ShouldAddRunner() {
         // Given
         Course course = new Course();
         Partant partant = Partant.builder().nom("Cheval1").numero(1).build();
@@ -24,7 +24,7 @@ class CourseTest {
     }
     
     @Test
-    void ajouterPartant_AvecNumeroExistant_DevraitLeverException() {
+    void addRunner_WithExistingNumber_ShouldThrowException() {
         // Given
         Course course = new Course();
         course.ajouterPartant(Partant.builder().nom("Cheval1").numero(1).build());
@@ -35,7 +35,7 @@ class CourseTest {
     }
     
     @Test
-    void estValide_MoinsDeTroisPartants_DevraitRetournerFaux() {
+    void isValid_LessThanThreeRunners_ShouldReturnFalse() {
         // Given
         Course course = Course.builder()
                 .nom("Course Test")
@@ -48,11 +48,11 @@ class CourseTest {
                 .build();
         
         // When & Then
-        assertFalse(course.estValide());
+        assertFalse(course.isValid());
     }
     
     @Test
-    void estValide_PartantsAvecNumerosNonContinus_DevraitRetournerFaux() {
+    void isValid_NonContiguousRunnerNumbers_ShouldReturnFalse() {
         // Given
         Course course = Course.builder()
                 .nom("Course Test")
@@ -66,11 +66,11 @@ class CourseTest {
                 .build();
         
         // When & Then
-        assertFalse(course.estValide());
+        assertFalse(course.isValid());
     }
     
     @Test
-    void estValide_PartantsAvecNumerosNeCommencantPasA1_DevraitRetournerFaux() {
+    void isValid_RunnerNumbersNotStartingWithOne_ShouldReturnFalse() {
         // Given
         Course course = Course.builder()
                 .nom("Course Test")
@@ -84,11 +84,11 @@ class CourseTest {
                 .build();
         
         // When & Then
-        assertFalse(course.estValide());
+        assertFalse(course.isValid());
     }
     
     @Test
-    void estValide_CourseValide_DevraitRetournerVrai() {
+    void isValid_ValidRace_ShouldReturnTrue() {
         // Given
         Course course = Course.builder()
                 .nom("Course Test")
@@ -102,6 +102,6 @@ class CourseTest {
                 .build();
         
         // When & Then
-        assertTrue(course.estValide());
+        assertTrue(course.isValid());
     }
 } 
