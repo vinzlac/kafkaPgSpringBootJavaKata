@@ -18,13 +18,10 @@ public class PartantEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
     private String nom;
-    
-    @Column(nullable = false)
     private int numero;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "course_id")
     private CourseEntity course;
 } 

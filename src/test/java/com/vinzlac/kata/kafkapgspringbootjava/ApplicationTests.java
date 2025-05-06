@@ -13,7 +13,7 @@ import org.springframework.test.context.TestPropertySource;
     "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}"
 })
 @ActiveProfiles("test")
-class KafkapgspringbootjavaApplicationTests {
+class ApplicationTests {
 
 	@Test
 	void contextLoads() {
