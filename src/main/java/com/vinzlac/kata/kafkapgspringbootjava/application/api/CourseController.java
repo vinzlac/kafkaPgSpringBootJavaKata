@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
+@Slf4j
 public class CourseController {
     
     private final CourseApplicationService courseApplicationService;
@@ -30,6 +32,9 @@ public class CourseController {
     @ApiResponse(responseCode = "201", description = "Course créée avec succès")
     @ApiResponse(responseCode = "400", description = "Données invalides", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<CourseResponse> createCourse(@Valid @RequestBody CourseRequest courseRequest) {
+        log.info("Received request to create course: {}, date={}, partants={}", 
+                courseRequest.nom(), courseRequest.date(), courseRequest.partants().size());
+        
         Course course = Course.builder()
                 .nom(courseRequest.nom())
                 .numero(courseRequest.numero())
@@ -46,6 +51,7 @@ public class CourseController {
         });
         
         Course savedCourse = courseApplicationService.createCourse(course);
+        log.debug("Course created successfully with ID: {}", savedCourse.getId());
         return new ResponseEntity<>(mapToResponse(savedCourse), HttpStatus.CREATED);
     }
     
@@ -54,8 +60,12 @@ public class CourseController {
     @ApiResponse(responseCode = "200", description = "Course trouvée")
     @ApiResponse(responseCode = "404", description = "Course non trouvée")
     public ResponseEntity<CourseResponse> getCourseById(@PathVariable Long id) {
+        log.info("Received request to get course with ID: {}", id);
         return courseApplicationService.getCourseById(id)
-                .map(course -> ResponseEntity.ok(mapToResponse(course)))
+                .map(course -> {
+                    log.debug("Course found with ID: {}", id);
+                    return ResponseEntity.ok(mapToResponse(course));
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
     
@@ -63,10 +73,12 @@ public class CourseController {
     @Operation(summary = "Récupérer toutes les courses pour une date donnée")
     public ResponseEntity<List<CourseResponse>> getCoursesByDate(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        log.info("Received request to get all courses for date: {}", date);
         List<Course> courses = courseApplicationService.getCoursesByDate(date);
         List<CourseResponse> responses = courses.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+        log.debug("Returning {} courses for date: {}", responses.size(), date);
         return ResponseEntity.ok(responses);
     }
     

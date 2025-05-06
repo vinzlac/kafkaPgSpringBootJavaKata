@@ -20,20 +20,29 @@ public class CourseEventPublisherAdapter implements CourseEventPublisher {
     
     @Override
     public void publishCourseCreated(Course course) {
+        log.info("Publishing course created event for course ID: {}, name: {}, to topic: {}", 
+                course.getId(), course.getNom(), courseTopic);
+        
         CourseCreatedEvent event = mapToCourseCreatedEvent(course);
+        log.debug("Event payload: {}", event);
+        
         kafkaTemplate.send(courseTopic, String.valueOf(course.getId()), event)
                 .whenComplete((result, ex) -> {
                     if (ex == null) {
-                        log.info("Message envoyé avec succès pour la course {} : {}", 
-                                course.getId(), result.getRecordMetadata());
+                        log.debug("Message successfully sent for course ID: {}, topic: {}, partition: {}, offset: {}", 
+                                course.getId(), 
+                                result.getRecordMetadata().topic(),
+                                result.getRecordMetadata().partition(),
+                                result.getRecordMetadata().offset());
                     } else {
-                        log.error("Impossible d'envoyer le message pour la course {}", 
-                                course.getId(), ex);
+                        log.error("Failed to send message for course ID: {}, error: {}", 
+                                course.getId(), ex.getMessage(), ex);
                     }
                 });
     }
     
     private CourseCreatedEvent mapToCourseCreatedEvent(Course course) {
+        log.debug("Mapping course to event: courseId={}, partants={}", course.getId(), course.getPartants().size());
         return CourseCreatedEvent.builder()
                 .id(course.getId())
                 .nom(course.getNom())
