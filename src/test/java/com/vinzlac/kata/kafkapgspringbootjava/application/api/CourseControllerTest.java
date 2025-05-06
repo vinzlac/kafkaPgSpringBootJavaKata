@@ -1,14 +1,17 @@
 package com.vinzlac.kata.kafkapgspringbootjava.application.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vinzlac.kata.kafkapgspringbootjava.application.service.CourseApplicationService;
+import com.vinzlac.kata.kafkapgspringbootjava.application.Application;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Course;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Partant;
+import com.vinzlac.kata.kafkapgspringbootjava.application.service.CourseApplicationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -20,7 +23,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CourseController.class)
+@SpringBootTest(
+    classes = Application.class,
+    webEnvironment = SpringBootTest.WebEnvironment.MOCK
+)
+@AutoConfigureMockMvc
+@ActiveProfiles("test")
 class CourseControllerTest {
 
     @Autowired
@@ -38,8 +46,8 @@ class CourseControllerTest {
         LocalDate today = LocalDate.now();
         CourseRequest request = new CourseRequest(
                 "Course Test",
-                1,  // Fixed: This is numero
-                today, // Fixed: This is date
+                1,
+                today,
                 List.of(
                         new PartantRequest("Cheval1", 1),
                         new PartantRequest("Cheval2", 2),

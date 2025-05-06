@@ -1,5 +1,6 @@
 package com.vinzlac.kata.kafkapgspringbootjava.integration;
 
+import com.vinzlac.kata.kafkapgspringbootjava.application.Application;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Course;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.model.Partant;
 import com.vinzlac.kata.kafkapgspringbootjava.domain.service.CourseService;
@@ -20,6 +21,7 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -29,8 +31,12 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
-@EmbeddedKafka(partitions = 1, topics = {"courses"})
+@SpringBootTest(classes = Application.class)
+@EmbeddedKafka(partitions = 1, topics = {"course-created-test"})
+@TestPropertySource(properties = {
+    "kafka.topics.course-created=course-created-test",
+    "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}"
+})
 @ActiveProfiles("test")
 class CourseIntegrationTest {
     
